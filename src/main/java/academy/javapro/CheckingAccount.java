@@ -5,7 +5,7 @@ package academy.javapro;
  * Features overdraft protection and transaction fees.
  */
 public class CheckingAccount extends Account {
-    private final double overdraftLimit;
+    private double overdraftLimit;
     private static final double TRANSACTION_FEE = 1.5; // Fee per withdrawal
 
     /**
@@ -27,7 +27,8 @@ public class CheckingAccount extends Account {
      * @return The overdraft limit
      */
     public double getOverdraftLimit() {
-        throw new UnsupportedOperationException("Method not implemented");
+        return overdraftLimit;
+        
     }
 
     /**
@@ -36,7 +37,9 @@ public class CheckingAccount extends Account {
      * @param overdraftLimit The new overdraft limit
      */
     public void setOverdraftLimit(double overdraftLimit) {
-        throw new UnsupportedOperationException("Method not implemented");
+        this.overdraftLimit = overdraftLimit;
+
+        System.out.println("Overdraft limit has been updated to: $" + String.format("%.2f", overdraftLimit));
     }
 
     /**
@@ -45,7 +48,25 @@ public class CheckingAccount extends Account {
      */
     @Override
     public void withdraw(double amount) {
-        throw new UnsupportedOperationException("Method not implemented");
+
+        if (getBalance() - amount >= -overdraftLimit) 
+        {
+
+            double newBalance = getBalance() - amount - TRANSACTION_FEE;
+            setBalance(newBalance); 
+            
+
+            System.out.println("Withdrew $" + String.format("%.2f", amount) + " from checking account.");
+            System.out.println("Transaction fee: $" + String.format("%.2f", TRANSACTION_FEE));
+            System.out.println("Account is in overdraft. Current balance: $" + String.format("%.2f", getBalance()));
+
+            logTransaction("WITHDRAWAL", amount); 
+            logTransaction("FEE", TRANSACTION_FEE);
+    
+        } else 
+            {
+                System.out.println("Overdraft limit exceeded. There are insufficient funds to execute withdrawal.");
+            }   
     }
 
     /**
